@@ -58,3 +58,12 @@ void AAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 }
 
+void AAICharacter::SetPatrolPoints(TArray<ATargetPoint*> PatrolPointsParam)
+{
+	PatrolPoints = PatrolPointsParam;
+	if(PatrolPoints.Num() > 0 && bPatrol)
+	{
+		MoveToNextPatrolPoint();	
+	}
+}
+

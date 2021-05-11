@@ -26,11 +26,10 @@ protected:
 	ATargetPoint* CurrentPatrolPoint;
 
 	UPROPERTY(EditInstanceOnly, Category="AI")
-	bool bPatrol;
+	bool bPatrol = true;
 
 	int CurrentPatrolPointIndex;
 	
-	UPROPERTY(EditInstanceOnly, Category="AI")
 	TArray<ATargetPoint*> PatrolPoints;	
 
 
@@ -40,5 +39,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void SetPatrolPoints(TArray<ATargetPoint*> PatrolPointsParam);
 
 };
