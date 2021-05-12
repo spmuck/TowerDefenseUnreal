@@ -23,8 +23,7 @@ protected:
 	UBoxComponent* OverlapComp;
 	UFUNCTION()
 	void HandleOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	UPROPERTY(EditAnywhere, Category="Gameplay")
-	int Health = 10;
+	
 
 	void HandleEnemyEnterZone();
 
@@ -32,5 +31,6 @@ protected:
 	USoundBase* ObjectiveMissingSound;
 
 public:	
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Gameplay")
+	int Health = 10;
 };

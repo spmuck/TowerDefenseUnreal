@@ -13,6 +13,7 @@ class ATowerDefenseGameMode : public AGameModeBase
 
 public:
 	ATowerDefenseGameMode();
+	void GameEnd(bool success);
 };
 
 
