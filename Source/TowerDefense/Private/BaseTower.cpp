@@ -26,7 +26,8 @@ ABaseTower::ABaseTower()
 }
 
 void ABaseTower::BeginPlay()
-{	
+{
+	Super::BeginPlay();
 	GetWorldTimerManager().SetTimer(TimerHandle_FireProjectile, this, &ABaseTower::FireProjectileAtTargetEnemy, SecondsBetweenShots);
 }
 
@@ -64,6 +65,9 @@ void ABaseTower::Tick(float DeltaTime)
 	{
 		AAICharacter* TargetEnemy = TargetEnemies.GetData()[0];
 		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetEnemy->GetActorLocation());
+		//We only want to change the tower's yaw to make it point at enemy.
+		Rotation.Pitch = 0.0f;
+		Rotation.Roll = 0.0f;
 		SetActorRotation(Rotation);
 	}
 }
