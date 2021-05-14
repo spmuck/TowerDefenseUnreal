@@ -54,7 +54,22 @@ void ABaseTower::OnEnemyOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* 
 
 void ABaseTower::FireProjectileAtTargetEnemy()
 {
-	
+	if(TargetEnemies.Num() > 0)
+	{
+		AAICharacter* TargetEnemy = TargetEnemies.GetData()[0];
+		TArray<UActorComponent*> muzzleComponents = GetComponentsByTag(MeshComp->GetClass(), "Muzzle");
+		UStaticMeshComponent* muzzleComponent = Cast<UStaticMeshComponent>(muzzleComponents.GetData()[0]);
+		if(muzzleComponent)
+		{
+			FVector muzzleLocation = muzzleComponent->GetComponentTransform().GetLocation();
+			FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(muzzleLocation, TargetEnemy->GetActorLocation());
+			//Set Spawn Collision Handling Override
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+			AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, muzzleLocation, Rotation, ActorSpawnParams);
+		}
+			
+	}
 	GetWorldTimerManager().SetTimer(TimerHandle_FireProjectile, this, &ABaseTower::FireProjectileAtTargetEnemy, SecondsBetweenShots);
 }
 
