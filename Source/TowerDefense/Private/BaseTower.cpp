@@ -5,58 +5,56 @@
 
 #include "AICharacter.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ABaseTower::ABaseTower()
 {
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
-	RootComponent = MeshComp;
 
 	TowerAttackSphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("TowerAttackSphereComp"));
 	TowerAttackSphereComp->SetSphereRadius(TowerAttackSphereRadius);
 	TowerAttackSphereComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	TowerAttackSphereComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	TowerAttackSphereComp->OnComponentBeginOverlap.AddDynamic(this, &ABaseTower::OnEnemyOverlapBegin);
+	TowerAttackSphereComp->OnComponentEndOverlap.AddDynamic(this, &ABaseTower::OnEnemyOverlapEnd);
 	TowerAttackSphereComp->SetupAttachment(RootComponent);
-
-
 }
 
-// Called when the game starts or when spawned
 void ABaseTower::BeginPlay()
-{
-	Super::BeginPlay();
-	
+{	
+	GetWorldTimerManager().SetTimer(TimerHandle_FireProjectile, this, &ABaseTower::FireProjectileAtTargetEnemy, SecondsBetweenShots);
 }
 
-// Called every frame
-void ABaseTower::Tick(float DeltaTime)
+void ABaseTower::OnEnemyOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
+                                     class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::Tick(DeltaTime);
-}
-
-void ABaseTower::OnEnemyOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-
-	//skip logic if other actor is a null pointer, or we currently have a target.
-	if(OtherActor == nullptr || TargetEnemy != nullptr)
-	{
-		return;
-	}
 	AAICharacter* EnemyCharacter = Cast<AAICharacter>(OtherActor);
-	if(EnemyCharacter)
+	if(EnemyCharacter && !TargetEnemies.Contains(EnemyCharacter))
 	{
-		TargetEnemy = EnemyCharacter;
-		FireProjectileAtTargetEnemy(OtherActor);
+		TargetEnemies.Push(EnemyCharacter);
 	}
 	
 }
 
-void ABaseTower::FireProjectileAtTargetEnemy(AActor* OtherActor)
+void ABaseTower::OnEnemyOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	FVector direction = OtherActor->GetActorLocation() - GetActorLocation();
-	direction.Normalize();
-	direction *= 50.0f;
-	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, GetActorLocation() + direction, GetActorRotation() );
+	AAICharacter* EnemyCharacter = Cast<AAICharacter>(OtherActor);
+	if(EnemyCharacter && TargetEnemies.Contains(EnemyCharacter))
+	{
+		TargetEnemies.Remove(EnemyCharacter);
+	}
+}
+
+void ABaseTower::FireProjectileAtTargetEnemy()
+{
+	if(TargetEnemies.Num() > 0)
+	{
+		AAICharacter* TargetEnemy = TargetEnemies.GetData()[0];
+		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetEnemy->GetActorLocation());
+		SetActorRotation(Rotation);
+	}
+	GetWorldTimerManager().SetTimer(TimerHandle_FireProjectile, this, &ABaseTower::FireProjectileAtTargetEnemy, SecondsBetweenShots);
 }
 

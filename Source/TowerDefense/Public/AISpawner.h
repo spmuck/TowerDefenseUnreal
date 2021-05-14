@@ -27,8 +27,4 @@ protected:
 	UPROPERTY(EditInstanceOnly, Category="AI")
 	TArray<ATargetPoint*> PatrolPoints;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 };
