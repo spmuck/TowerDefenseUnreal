@@ -10,7 +10,11 @@
 // Sets default values
 ABaseTower::ABaseTower()
 {
+	// Activate ticking in order to update the cursor every frame.
+	PrimaryActorTick.bCanEverTick = true;
+	
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
+	RootComponent = MeshComp;
 
 	TowerAttackSphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("TowerAttackSphereComp"));
 	TowerAttackSphereComp->SetSphereRadius(TowerAttackSphereRadius);
@@ -49,12 +53,18 @@ void ABaseTower::OnEnemyOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* 
 
 void ABaseTower::FireProjectileAtTargetEnemy()
 {
+	
+	GetWorldTimerManager().SetTimer(TimerHandle_FireProjectile, this, &ABaseTower::FireProjectileAtTargetEnemy, SecondsBetweenShots);
+}
+
+void ABaseTower::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 	if(TargetEnemies.Num() > 0)
 	{
 		AAICharacter* TargetEnemy = TargetEnemies.GetData()[0];
 		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetEnemy->GetActorLocation());
 		SetActorRotation(Rotation);
 	}
-	GetWorldTimerManager().SetTimer(TimerHandle_FireProjectile, this, &ABaseTower::FireProjectileAtTargetEnemy, SecondsBetweenShots);
 }
 

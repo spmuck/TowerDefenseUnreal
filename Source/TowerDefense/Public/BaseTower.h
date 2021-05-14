@@ -51,5 +51,9 @@ protected:
 
 	UFUNCTION()
 	void FireProjectileAtTargetEnemy();
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 	
 };
