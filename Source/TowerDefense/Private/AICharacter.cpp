@@ -77,3 +77,18 @@ int32 AAICharacter::GetMaxHealth() const
 	return GetClass()->GetDefaultObject<AAICharacter>()->GetHealth();
 }
 
+void AAICharacter::ApplyDamage(float Damage)
+{
+	Health -= Damage;
+	if(Health <= 0)
+	{
+		HandleDeath();
+	}
+}
+
+void AAICharacter::HandleDeath()
+{
+	Destroy();
+}
+
+

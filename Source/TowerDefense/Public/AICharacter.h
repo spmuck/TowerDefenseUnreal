@@ -37,6 +37,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Health)
 	float Health = 100.0f;
 
+	void HandleDeath();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -52,5 +54,7 @@ public:
 	/** get max health */
 	UFUNCTION(BlueprintCallable, Category=Health)
 	int32 GetMaxHealth() const;
+
+	void ApplyDamage(float Damage);
 
 };

@@ -41,7 +41,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	AAICharacter* EnemyCharacter = Cast<AAICharacter>(OtherActor);
 	if(EnemyCharacter)
 	{
-		EnemyCharacter->Destroy();
+		EnemyCharacter->ApplyDamage(25.0f);
 	}
 	Destroy();
 }
