@@ -13,6 +13,7 @@ class TOWERDEFENSE_API AAICharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+
 public:
 	// Sets default values for this character's properties
 	AAICharacter();
@@ -30,9 +31,11 @@ protected:
 
 	int CurrentPatrolPointIndex;
 	
-	TArray<ATargetPoint*> PatrolPoints;	
+	TArray<ATargetPoint*> PatrolPoints;
 
-
+	/** Current health of this Pawn */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Health)
+	float Health = 100.0f;
 
 public:	
 	// Called every frame
@@ -41,5 +44,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void SetPatrolPoints(TArray<ATargetPoint*> PatrolPointsParam);
+
+	/** get current health */
+	UFUNCTION(BlueprintCallable, Category=Health)
+	int32 GetHealth();
+
+	/** get max health */
+	UFUNCTION(BlueprintCallable, Category=Health)
+	int32 GetMaxHealth() const;
 
 };

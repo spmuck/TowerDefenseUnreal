@@ -67,3 +67,13 @@ void AAICharacter::SetPatrolPoints(TArray<ATargetPoint*> PatrolPointsParam)
 	}
 }
 
+int32 AAICharacter::GetHealth()
+{
+	return Health;
+}
+
+int32 AAICharacter::GetMaxHealth() const
+{
+	return GetClass()->GetDefaultObject<AAICharacter>()->GetHealth();
+}
+
