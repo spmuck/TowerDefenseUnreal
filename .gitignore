@@ -70,5 +70,7 @@ Intermediate/*
 #Binaries
 Binaries/*
 
+Content/CityofBrass_Enemies
+
 # Cache files for the editor to use
 DerivedDataCache/*
