@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "BaseTower.h"
 #include "GameFramework/PlayerController.h"
 #include "TowerDefensePlayerController.generated.h"
 
@@ -35,6 +37,11 @@ protected:
 	/** Input handlers for SetDestination action. */
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
+
+	void onBuildModePressed();
+
+	UPROPERTY(EditDefaultsOnly, Category="Build")
+	TSubclassOf<ABaseTower> TowerClass;
 };
 
 

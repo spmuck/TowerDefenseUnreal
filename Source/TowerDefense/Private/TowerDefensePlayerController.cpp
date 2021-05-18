@@ -36,6 +36,9 @@ void ATowerDefensePlayerController::SetupInputComponent()
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ATowerDefensePlayerController::MoveToTouchLocation);
 	InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &ATowerDefensePlayerController::MoveToTouchLocation);
 
+	//Bind Build Key
+	InputComponent->BindAction("BuildMode", IE_Pressed, this, &ATowerDefensePlayerController::onBuildModePressed);
+
 }
 
 void ATowerDefensePlayerController::MoveToMouseCursor()
@@ -103,4 +106,15 @@ void ATowerDefensePlayerController::OnSetDestinationReleased()
 {
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
+}
+
+void ATowerDefensePlayerController::onBuildModePressed()
+{
+	if (ATowerDefenseCharacter* MyPawn = Cast<ATowerDefenseCharacter>(GetPawn()))
+	{
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		ABaseTower* Tower = GetWorld()->SpawnActor<ABaseTower>(TowerClass, MyPawn->GetCursorToWorld()->GetComponentLocation(), MyPawn->GetCursorToWorld()->GetComponentRotation(), ActorSpawnParams);
+	}
 }
