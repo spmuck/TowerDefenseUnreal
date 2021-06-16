@@ -16,6 +16,12 @@ class ATowerDefensePlayerController : public APlayerController
 public:
 	ATowerDefensePlayerController();
 
+	/** get current health */
+	UFUNCTION(BlueprintCallable, Category=Health)
+	int32 GetGold();
+
+	void AddGold(int32 DeltaGold);
+
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
@@ -42,6 +48,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Build")
 	TSubclassOf<ABaseTower> TowerClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Health)
+	float Gold = 100.0f;
 };
 
 

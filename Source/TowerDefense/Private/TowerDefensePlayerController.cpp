@@ -13,6 +13,21 @@ ATowerDefensePlayerController::ATowerDefensePlayerController()
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
 
+int32 ATowerDefensePlayerController::GetGold()
+{
+	return Gold;
+}
+
+void ATowerDefensePlayerController::AddGold(int32 DeltaGold)
+{
+	Gold += DeltaGold;
+	//Yo fuck debt.
+	if(Gold < 0)
+	{
+		Gold = 0;
+	}
+}
+
 void ATowerDefensePlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
@@ -38,7 +53,6 @@ void ATowerDefensePlayerController::SetupInputComponent()
 
 	//Bind Build Key
 	InputComponent->BindAction("BuildMode", IE_Pressed, this, &ATowerDefensePlayerController::onBuildModePressed);
-
 }
 
 void ATowerDefensePlayerController::MoveToMouseCursor()
@@ -112,9 +126,13 @@ void ATowerDefensePlayerController::onBuildModePressed()
 {
 	if (ATowerDefenseCharacter* MyPawn = Cast<ATowerDefenseCharacter>(GetPawn()))
 	{
-		FActorSpawnParameters ActorSpawnParams;
-		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		if (Gold >= 100)
+		{
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		ABaseTower* Tower = GetWorld()->SpawnActor<ABaseTower>(TowerClass, MyPawn->GetCursorToWorld()->GetComponentLocation(), MyPawn->GetCursorToWorld()->GetComponentRotation(), ActorSpawnParams);
+			ABaseTower* Tower = GetWorld()->SpawnActor<ABaseTower>(TowerClass, MyPawn->GetCursorToWorld()->GetComponentLocation(), FRotator::ZeroRotator, ActorSpawnParams);
+			AddGold(-100);
+		}
 	}
 }

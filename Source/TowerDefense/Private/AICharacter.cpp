@@ -3,7 +3,9 @@
 
 #include "AICharacter.h"
 
+#include "TowerDefensePlayerController.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AAICharacter::AAICharacter()
@@ -88,6 +90,11 @@ void AAICharacter::ApplyDamage(float Damage)
 
 void AAICharacter::HandleDeath()
 {
+	if (ATowerDefensePlayerController* PC = Cast<ATowerDefensePlayerController>(UGameplayStatics::GetPlayerController(GetWorld(),0)))
+	{
+		PC->AddGold(20);
+	}
+	
 	Destroy();
 }
 
