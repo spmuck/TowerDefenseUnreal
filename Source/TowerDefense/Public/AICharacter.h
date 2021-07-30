@@ -30,11 +30,11 @@ protected:
 	bool bPatrol = true;
 
 	int CurrentPatrolPointIndex;
-	
+
 	TArray<ATargetPoint*> PatrolPoints;
 
 	/** Current health of this Pawn */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Health)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health")
 	float Health = 100.0f;
 
 	void HandleDeath();

@@ -4,6 +4,7 @@
 #include "GoalZone.h"
 
 #include "AICharacter.h"
+#include "TowerDefenseGameMode.h"
 #include "Components/BoxComponent.h"
 #include "Components/DecalComponent.h"
 
@@ -41,5 +42,13 @@ void AGoalZone::HandleOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 void AGoalZone::HandleEnemyEnterZone()
 {
 	Health--;
+	if(Health <= 0)
+	{
+		ATowerDefenseGameMode* GM = Cast<ATowerDefenseGameMode>( GetWorld()->GetAuthGameMode());
+		if(GM)
+		{
+			GM->GameEnd(false);
+		}
+	}
 	UE_LOG(LogTemp, Log, TEXT("Enemy Reached Zone. Health Left: %d"), Health);
 }

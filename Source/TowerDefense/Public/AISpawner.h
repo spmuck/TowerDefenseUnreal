@@ -26,5 +26,7 @@ protected:
 	void SpawnAI();
 	UPROPERTY(EditInstanceOnly, Category="AI")
 	TArray<ATargetPoint*> PatrolPoints;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI")
+	float SecondsBetweenSpawns;
 
 };

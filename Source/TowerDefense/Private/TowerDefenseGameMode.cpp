@@ -3,10 +3,12 @@
 #include "TowerDefenseGameMode.h"
 #include "TowerDefensePlayerController.h"
 #include "TowerDefenseCharacter.h"
+#include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 
 ATowerDefenseGameMode::ATowerDefenseGameMode()
 {
+	bGameOver = false;
 	// use our custom PlayerController class
 	PlayerControllerClass = ATowerDefensePlayerController::StaticClass();
 
@@ -20,5 +22,18 @@ ATowerDefenseGameMode::ATowerDefenseGameMode()
 
 void ATowerDefenseGameMode::GameEnd(bool success)
 {
-	
+	if (!bGameOver)
+	{
+		bGameOver = true;
+		if(!success)
+		{
+			UGameplayStatics::PlaySound2D(this, LosingSound);
+		}
+		APawn* MyPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+		if(MyPawn)
+		{
+			MyPawn->DisableInput(nullptr);
+		}
+	}
+	OnGameEnd(success);
 }
