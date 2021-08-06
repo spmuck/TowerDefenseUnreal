@@ -87,3 +87,8 @@ void ABaseTower::Tick(float DeltaTime)
 	}
 }
 
+void ABaseTower::BuildTower()
+{
+	
+}
+

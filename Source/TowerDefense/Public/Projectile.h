@@ -14,6 +14,8 @@ class TOWERDEFENSE_API AProjectile : public AActor
 	GENERATED_BODY()
 
 protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	
 	/** Sphere collision component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= "Projectile")
@@ -22,6 +24,9 @@ protected:
 	/** Projectile movement component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	UProjectileMovementComponent* ProjectileMovement;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Projectile")
+	float ProjectileSpeed;
 	
 public:
 	

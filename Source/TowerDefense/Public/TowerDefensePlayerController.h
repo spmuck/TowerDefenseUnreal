@@ -26,6 +26,10 @@ protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
 
+	bool bIsBuildingMode;
+
+	ABaseTower* TowerToBeBuilt;
+
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
@@ -33,6 +37,8 @@ protected:
 
 	/** Navigate player to the current mouse cursor location. */
 	void MoveToMouseCursor();
+
+	void MoveTowerToCursor();
 
 	/** Navigate player to the current touch location. */
 	void MoveToTouchLocation(const ETouchIndex::Type FingerIndex, const FVector Location);

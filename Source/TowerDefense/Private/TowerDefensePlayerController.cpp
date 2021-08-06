@@ -33,7 +33,11 @@ void ATowerDefensePlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	// keep updating the destination every tick while desired
-	if (bMoveToMouseCursor)
+	if(bIsBuildingMode)
+	{
+		MoveTowerToCursor();
+	}
+	else if (bMoveToMouseCursor)
 	{
 		MoveToMouseCursor();
 	}
@@ -81,6 +85,15 @@ void ATowerDefensePlayerController::MoveToMouseCursor()
 	}
 }
 
+void ATowerDefensePlayerController::MoveTowerToCursor()
+{
+	ATowerDefenseCharacter* MyPawn = Cast<ATowerDefenseCharacter>(GetPawn());
+	if(bIsBuildingMode && TowerToBeBuilt && MyPawn)
+	{
+		TowerToBeBuilt->SetActorLocation(MyPawn->GetCursorToWorld()->GetComponentLocation());
+	}
+}
+
 void ATowerDefensePlayerController::MoveToTouchLocation(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	FVector2D ScreenSpaceLocation(Location);
@@ -112,8 +125,16 @@ void ATowerDefensePlayerController::SetNewMoveDestination(const FVector DestLoca
 
 void ATowerDefensePlayerController::OnSetDestinationPressed()
 {
-	// set flag to keep updating destination until released
-	bMoveToMouseCursor = true;
+	if(bIsBuildingMode)
+	{
+		bIsBuildingMode = false;
+		TowerToBeBuilt->BuildTower();
+	}
+	else
+	{
+		bMoveToMouseCursor = true;
+	}
+	
 }
 
 void ATowerDefensePlayerController::OnSetDestinationReleased()
@@ -124,6 +145,11 @@ void ATowerDefensePlayerController::OnSetDestinationReleased()
 
 void ATowerDefensePlayerController::onBuildModePressed()
 {
+	bIsBuildingMode = !bIsBuildingMode;
+	if(!bIsBuildingMode)
+	{
+		return;
+	}
 	if (ATowerDefenseCharacter* MyPawn = Cast<ATowerDefenseCharacter>(GetPawn()))
 	{
 		if (Gold >= 100)
@@ -131,8 +157,16 @@ void ATowerDefensePlayerController::onBuildModePressed()
 			FActorSpawnParameters ActorSpawnParams;
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-			ABaseTower* Tower = GetWorld()->SpawnActor<ABaseTower>(TowerClass, MyPawn->GetCursorToWorld()->GetComponentLocation(), FRotator::ZeroRotator, ActorSpawnParams);
+			TowerToBeBuilt = GetWorld()->SpawnActor<ABaseTower>(TowerClass, MyPawn->GetCursorToWorld()->GetComponentLocation(), FRotator::ZeroRotator, ActorSpawnParams);
 			AddGold(-100);
 		}
+		else
+		{
+			bIsBuildingMode = false;
+		}
+	}
+	else
+	{
+		bIsBuildingMode = false;
 	}
 }

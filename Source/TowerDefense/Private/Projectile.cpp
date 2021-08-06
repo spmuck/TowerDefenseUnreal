@@ -7,9 +7,17 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
+void AProjectile::BeginPlay()
+{
+	Super::BeginPlay();
+	ProjectileMovement->InitialSpeed = ProjectileSpeed;
+	ProjectileMovement->MaxSpeed = ProjectileSpeed;
+}
+
 // Sets default values
 AProjectile::AProjectile()
 {
+	ProjectileSpeed = 5000.0f;
 	// Use a sphere as a simple collision representation
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	CollisionComp->InitSphereRadius(5.0f);
@@ -26,8 +34,6 @@ AProjectile::AProjectile()
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 3000.f;
-	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 
